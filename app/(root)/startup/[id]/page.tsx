@@ -1,32 +1,21 @@
-import { Suspense } from "react";
+import React from "react";
 import { client } from "@/sanity/lib/client";
-import {
-  PLAYLIST_BY_SLUG_QUERY,
-  STARTUP_BY_ID_QUERY,
-} from "@/sanity/lib/queries";
+import { STARTUP_BY_ID_QUERY } from "@/lib/queries";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
-
 import markdownit from "markdown-it";
-import { Skeleton } from "@/components/ui/skeleton";
-import View from "@/components/View";
+import { Suspense } from "react";
 import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
 
 const md = markdownit();
 
-export const experimental_ppr = true;
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
 
-  const [post, { select: editorPosts }] = await Promise.all([
-    client.fetch(STARTUP_BY_ID_QUERY, { id }),
-    client.fetch(PLAYLIST_BY_SLUG_QUERY, {
-      slug: "editor-picks-new",
-    }),
-  ]);
+  const post = await client.fetch(STARTUP_BY_ID_QUERY, { id })
 
   if (!post) return notFound();
 
