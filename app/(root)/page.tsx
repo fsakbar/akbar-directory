@@ -3,6 +3,7 @@ import SearchForm from "../../components/SearchForm";
 import StartupCard, {StartupTypeCard} from "@/components/StartupCard";
 import { STARTUP_QUERY } from "@/lib/queries";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
+import { auth } from "@/auth";
 
 
 export default async function Home({searchParams}: {
@@ -10,10 +11,13 @@ export default async function Home({searchParams}: {
 }) {
   const query = (await searchParams)?.query || '';
   const params = {search: query || null}
-  const {data: posts} = await sanityFetch({query: STARTUP_QUERY, params})
 
-  console.log(JSON.stringify(posts, null, 2))
-  
+  const session = await auth()
+
+  console.log("this sesion is: ")
+  console.log(session?.id)
+
+  const {data: posts} = await sanityFetch({query: STARTUP_QUERY, params})
   
   return (
     <>
