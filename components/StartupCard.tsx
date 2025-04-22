@@ -1,29 +1,33 @@
 import React from 'react'
 import { formatDate } from '@/lib/utils'
-import { EyeIcon, Fullscreen } from 'lucide-react'
+import { EyeIcon } from 'lucide-react'
 import Link from "next/link";
 import Image from 'next/image';
-import { auth } from '@/auth';
 import { Button } from './ui/button';
 import { Author, Startup } from '@/sanity/types';
-// export type StartupTypeCard = Omit<Startup, "author"> & { author?: Author };
+import ShowMoreText from './ShowMoreText';
 
-export type StartupTypeCard = Omit<Startup, "auth"> & {auhtor?: Author};
+export type StartupTypeCard = Omit<Startup, "auth"> & { author?: Author };
 
-const StartupCard = ({post}: {post: StartupTypeCard}) => {
-  const {_createdAt, views, author, title, category, _id, image, description} = post
+const StartupCard = ({ post }: { post: StartupTypeCard }) => {
+  const { _createdAt, views, author, title, category, _id, image, description } = post;
+
   return (
-    <li className="startup-card group">
-        <div className="flex-between">
-            <p className='startup_card_date'>
-                {formatDate(_createdAt)}
-            </p>
-            <div className='flex gap-1.5'>
-                <EyeIcon className='size-6 text-primary'/>
-                <span className='text-16-medium'>{views}</span>
-            </div>
+    <li className="startup-card group flex flex-col justify-between h-full">
+      <div>
+        {/* Top: Date & Views */}
+        <div className="flex justify-between">
+          <p className='startup_card_date'>
+            {formatDate(_createdAt)}
+          </p>
+          <div className='flex gap-1.5'>
+            <EyeIcon className='size-6 text-primary' />
+            <span className='text-16-medium'>{views}</span>
+          </div>
         </div>
-        <div className='flex-between mt-5 gap-5'>
+
+        {/* Author, Title, and Image */}
+        <div className='flex justify-between mt-5 gap-5'>
           <div className='flex-1'>
             <Link href={`/user/${author?._id}`}>
               <p className='text-16-medium line-clamp-1'>{author?.name}</p>
@@ -34,33 +38,36 @@ const StartupCard = ({post}: {post: StartupTypeCard}) => {
           </div>
           <div>
             <Link href={`/user/${author?._id}`}>
-              <Image src="https://placehold.co/48x48" alt="placeholder" 
-              width={48} height={48} className='rounded-full'
-              />
+              <Image src="https://placehold.co/48x48" alt="placeholder"
+                width={48} height={48} className='rounded-full' />
             </Link>
           </div>
         </div>
-        <div className='mt-3 startup-card-desc'>
+
+        {/* Description */}
+        <div className='mt-3 startup-card-desc mb-3.5'>
+          <ShowMoreText text={description ?? ''} />
+          <div className='mt-2'>
           <Link href={`/startup/${_id}`}>
-            <p>{description}</p>
-            <Image src={image} alt='placeholder' className='startup-card_img' width={1000} height={200}/>
-            {/* <img src={image} alt="placeholder" className='startup-card_img'/> */}
+            <Image src={image} alt='placeholder' className='startup-card_img' width={1000} height={200} />
           </Link>
+          </div>
         </div>
-        <div className='flex-between gap-3 mt-5'>
-          <Link href={`/?query=${category?.toLowerCase()}`}>
-            <p className='text-16-medium'>{category}</p> 
+      </div>
+
+      {/* Bottom: Category and Details */}
+      <div className="flex justify-between gap-3 mt-auto">
+        <Link href={`/?query=${category?.toLowerCase()}`}>
+          <p className='text-16-medium'>{category}</p>
+        </Link>
+        <Button className="startup-card_btn" asChild>
+          <Link href={`/startup/${_id}`}>
+            Details
           </Link>
-          <Button className="startup-card_btn" asChild>
-            <Link href={`/startup/${_id}`}>
-              Details
-            </Link>
-          </Button>
-        </div>
-
-
+        </Button>
+      </div>
     </li>
-  )
-}
+  );
+};
 
-export default StartupCard
+export default StartupCard;

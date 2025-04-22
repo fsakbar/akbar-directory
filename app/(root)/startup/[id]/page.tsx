@@ -11,6 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import View from "@/components/View";
 
 
+export const experimental_ppr = true
+
 const md = markdownit();
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -75,6 +77,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
 
         <hr className="divider" />
+        <View id={id}/>
         <Suspense fallback={<Skeleton className="view_skelton"/>}>
           <View id={id}/>
         </Suspense>
