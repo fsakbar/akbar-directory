@@ -8,11 +8,8 @@ import { Send } from 'lucide-react';
 import { formSchema } from '@/lib/validation';
 import { z } from 'zod';
 import { toast } from "sonner"
-// import { useRouter } from 'next/router';
-
-
-
-
+import { createPitch } from '@/lib/actions';
+import { useRouter } from 'next/navigation';
 
 const StartupForm = () => {
     const [errors, setErrors] =  useState<Record<string, string>>({})
@@ -21,11 +18,9 @@ const StartupForm = () => {
 
     console.log("this is Startup Form")
 
-    // const router = useRouter();
-
+    const router = useRouter()
 
     // Use when the pitch is submiting, have loading animate.
-    // const isPending = false;
     const handleFormSubmit = async (prevState: any, formData: FormData) => {
         try {
             const formValues = {
@@ -38,17 +33,18 @@ const StartupForm = () => {
             await formSchema.parseAsync(formValues)
             console.log(formValues)
 
-            // const result = await createIdea(prevState, formData, pitch)
-            // console.log(result)
+            const result = await createPitch(prevState, formData, pitch);
+            console.log(result)
 
-            // if(result.status == 'SUCCESS'){
-            //     toast("Success", {description: 'Your Startup pitch has been created'})
-            //     router.push(`/startup/${result.id}`)
-            // }
+            if(result.status = "SUCCESS"){
+              toast("Event Success",{
+                description: "Your startup pitch has been created succesfully"
+              })
+              router.push(`/startup/${result._id}`)
+            }
+            
 
-            // return result
 
-           
 
         } catch (error){
             if(error instanceof z.ZodError){

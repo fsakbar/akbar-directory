@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import { parse } from "path";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -11,4 +12,9 @@ export function formatDate(date: string) {
     day: "numeric",
     year: "numeric",
   });
+}
+
+export function parseServerActionResponse<T>(response: T){
+  // Deep clone
+  return JSON.parse(JSON.stringify(response))
 }
